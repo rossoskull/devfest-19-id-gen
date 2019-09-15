@@ -9,3 +9,10 @@ Run the following command to install the Google Sheets module
 ```sh
     $ pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
 ```
+
+### Install `qrcode` for QR code generation
+Run the following command
+
+```sh
+    $ pip install qrcode[pil]
+```

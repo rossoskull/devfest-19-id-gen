@@ -6,10 +6,19 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
+# Import QR code stuff
+import qrcode
+import qrcode.image.svg
+
+# Import PIL stuff
+from PIL import Image
+
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
 # The ID and range of a sample spreadsheet.
+
+# ID of spreadsheet : https://docs.google.com/spreadsheets/d/<THIS-PART-IS-ID>/edit#gid=0
 SAMPLE_SPREADSHEET_ID = '1tnjNRDMcbPherAWI-pqDkRnhmcI9ClrBVfCHNokE9dg'
 SAMPLE_RANGE_NAME = 'A1:C'
 
@@ -48,8 +57,28 @@ def main():
   else:
     # We can access the sheet values here
     for row in values:
-      # Print columns A and E, which correspond to indices 0 and 4.
-      print('%s, %s' % (row[0], row[2]))
+      name = row[0]
+      contact = row[1]
+      role = row[2]
+
+      qr = qrcode.QRCode(
+        version = 5,
+        error_correction = qrcode.constants.ERROR_CORRECT_H,
+        box_size = 10,
+        border = 4,
+      )
+
+      # QR Code factory
+      # factory = qrcode.image.svg.SvgPathImage
+
+      data = '%s %s %s' % (name, contact, role)
+
+      qr.add_data(data)
+      qr.make(fit=True)
+      img = qr.make_image()
+
+      img.save(os.path.join('qrcodes', contact + '.png'))
+      # Image.open(code).save(os.path.join('qrcodes', contact + '.svg'))
 
 
 if __name__ == '__main__':

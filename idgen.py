@@ -11,7 +11,8 @@ import qrcode
 import qrcode.image.svg
 
 # Import PIL stuff
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
+import math
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
@@ -88,6 +89,15 @@ def main():
       # Paste QR code
       template.paste(img, (208, 680))
 
+      # Write the name
+      draw = ImageDraw.Draw(template)
+      font = ImageFont.truetype('Product-Sans-Regular.ttf', 55)
+
+      x, y = font.getsize(name)
+
+      draw.text(((321 - x / 2), (631 - y / 2)), name, font=font, fill='black')
+      
+      # Save the card
       template.save(os.path.join('cards', contact + '.png'))
 
 

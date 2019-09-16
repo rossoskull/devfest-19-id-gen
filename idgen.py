@@ -25,6 +25,8 @@ SAMPLE_RANGE_NAME = 'A1:C'
 
 
 def main():
+  print("Getting data from the sheet...")
+
   """Shows basic usage of the Sheets API.
   Prints values from a sample spreadsheet.
   """
@@ -57,10 +59,14 @@ def main():
     print('No data found.')
   else:
     # We can access the sheet values here
+    print("Data received.")
+
     for row in values:
       name = row[0]
       contact = row[1]
       role = row[2]
+
+      print('Generating card for %s...' % (name))
 
       qr = qrcode.QRCode(
         version = 1,
@@ -99,6 +105,8 @@ def main():
       
       # Save the card
       template.save(os.path.join('cards', contact + '.png'))
+
+    print('All cards printed successfully.')
 
 
 if __name__ == '__main__':

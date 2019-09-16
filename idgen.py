@@ -65,7 +65,7 @@ def main():
         version = 1,
         error_correction = qrcode.constants.ERROR_CORRECT_M,
         box_size = 10,
-        border = 1,
+        border = 4,
       )
 
       # QR Code factory
@@ -78,7 +78,7 @@ def main():
       img = qr.make_image()
 
       # Resize the QR code to 150px X 150px
-      img.thumbnail((150, 150), Image.ANTIALIAS)
+      img.thumbnail((221, 221), Image.ANTIALIAS)
 
       img.save(os.path.join('qrcodes', contact + '.png'))
       # Image.open(code).save(os.path.join('qrcodes', contact + '.svg'))
@@ -86,7 +86,7 @@ def main():
       template = Image.open('template.png')
 
       # Paste QR code
-      template.paste(img, (100, 100))
+      template.paste(img, (208, 680))
 
       template.save(os.path.join('cards', contact + '.png'))
 

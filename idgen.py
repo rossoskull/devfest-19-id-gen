@@ -123,6 +123,11 @@ def main():
       profileImage.putalpha(mask)
 
       template.paste(profileImage, (175, 282), profileImage)
+
+      # Add abstract element
+      element = Image.open('element.png')
+      element.thumbnail((59, 59), Image.ANTIALIAS)
+      template.paste(element, (397, 507), element)
       # Save the card
       template.save(os.path.join('cards', contact + '.png'))
 

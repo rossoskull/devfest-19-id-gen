@@ -85,6 +85,7 @@ def main():
 
       template = Image.open('template.png')
 
+      # Paste QR code
       template.paste(img, (100, 100))
 
       template.save(os.path.join('cards', contact + '.png'))

@@ -14,6 +14,9 @@ import qrcode.image.svg
 from PIL import Image, ImageDraw, ImageFont
 import math
 
+import requests
+from io import BytesIO
+
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
@@ -21,7 +24,7 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
 # ID of spreadsheet : https://docs.google.com/spreadsheets/d/<THIS-PART-IS-ID>/edit#gid=0
 SAMPLE_SPREADSHEET_ID = '1tnjNRDMcbPherAWI-pqDkRnhmcI9ClrBVfCHNokE9dg'
-SAMPLE_RANGE_NAME = 'A1:C'
+SAMPLE_RANGE_NAME = 'A1:D'
 
 
 def main():
@@ -65,6 +68,7 @@ def main():
       name = row[0]
       contact = row[1]
       role = row[2]
+      imageUrl = row[3]
 
       print('Generating card for %s...' % (name))
 
@@ -102,7 +106,23 @@ def main():
       x, y = font.getsize(name)
 
       draw.text(((321 - x / 2), (631 - y / 2)), name, font=font, fill='black')
+
+      # Get and paste the profile picture
+      print('\tGetting profile picture...')
+      imageResponse = requests.get(imageUrl)
+      profileImage = Image.open(BytesIO(imageResponse.content))
+
+      profileImage.thumbnail((288, 288), Image.ANTIALIAS)
       
+      # Make the image a circle
+      bigsize = (profileImage.size[0] * 3, profileImage.size[1] * 3)
+      mask = Image.new('L', bigsize, 0)
+      maskDraw = ImageDraw.Draw(mask)
+      maskDraw.ellipse((0,0) + bigsize, fill=255)
+      mask = mask.resize(profileImage.size, Image.ANTIALIAS)
+      profileImage.putalpha(mask)
+
+      template.paste(profileImage, (175, 282), profileImage)
       # Save the card
       template.save(os.path.join('cards', contact + '.png'))
 
